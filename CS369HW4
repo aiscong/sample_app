@@ -1,0 +1,35 @@
+Script started on Tue 18 Feb 2014 12:56:18 AM CST
+]0;cong@ubuntu: ~/rails_project/sample_appcong@ubuntu:~/rails_project/sample_app$ rails c
+Loading development environment (Rails 4.0.2)
+2.0.0-p353 :001 > def string_shuffle(s)
+2.0.0-p353 :002?>   s.split('').shuffle.join
+2.0.0-p353 :003?>   end
+ => nil 
+2.0.0-p353 :004 > string_shuffle("foobar")
+ => "boraof" 
+2.0.0-p353 :005 > class String
+2.0.0-p353 :006?>   def shuffle
+2.0.0-p353 :007?>     self.split('').shuffle.join
+2.0.0-p353 :008?>     end
+2.0.0-p353 :009?>   end
+ => nil 
+2.0.0-p353 :010 > "foobar".shuffle
+ => "oobfar" 
+2.0.0-p353 :011 > person1 = {first: "abc", last: "def"}
+ => {:first=>"abc", :last=>"def"} 
+2.0.0-p353 :012 > person2 = {first: "ghi", last: "pqr"}
+ => {:first=>"ghi", :last=>"pqr"} 
+2.0.0-p353 :013 > person3 = {first: "mno", last: "jkl"}
+ => {:first=>"mno", :last=>"jkl"} 
+2.0.0-p353 :014 > params = {father: person1, mother: person2, child: person3}
+ => {:father=>{:first=>"abc", :last=>"def"}, :mother=>{:first=>"ghi", :last=>"pqr"}, :child=>{:first=>"mno", :last=>"jkl"}} 
+2.0.0-p353 :015 > params[:father][:first]
+ => "abc" 
+2.0.0-p353 :016 > params[:mother][:last]
+ => "pqr" 
+2.0.0-p353 :017 > params[:child][:first]
+ => "mno" 
+2.0.0-p353 :018 > exit
+]0;cong@ubuntu: ~/rails_project/sample_appcong@ubuntu:~/rails_project/sample_app$ exit
+
+Script done on Tue 18 Feb 2014 01:00:29 AM CST
