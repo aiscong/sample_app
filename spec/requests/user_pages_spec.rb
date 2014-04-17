@@ -51,12 +51,46 @@ describe "User pages" do
   
   describe "profile page" do
     let(:user) { FactoryGirl.create(:user) }
-    before { visit user_path(user) }
-
+    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo") }
+    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Bar") }
+    
+   
+    before { visit user_path(user) } # /app/views/users/show.html.erb
+   
     it { should have_content(user.name) }
     it { should have_title(user.name) }
+
+    describe "microposts" do
+      it { should have_content(m1.content) }
+      it { should have_content(m2.content) }
+      it { should have_content(user.microposts.count) }
+    end
   end
 
+  #buggy code
+  describe "delete links should not appear on the microposts not created by current user" do
+    before do
+      bob = FactoryGirl.create(:user, name: "Bob", email: "bob@example.com")
+      FactoryGirl.create(:micropost, user: bob, content: "Bar") 
+      sign_in FactoryGirl.create(:user)
+      visit users_path
+      click_link('Bob')
+    end
+    #let!(:another){User.find_by(email: 'bob@example.com') }
+  
+    it { should have_content('Bar')}
+    it { should_not have_content('delete')}
+  end
+
+  describe "microposts pagination" do
+    let(:user) { FactoryGirl.create(:user) }
+    before(:each)  { 60.times { FactoryGirl.create(:micropost, user: user) }} # Is this constructed properly? Perhaps the posts are not created, and that's why the failure to render the paginate code in test.
+    after(:each)   { user.microposts.delete_all } # I have tested with and without this line of code - it fails both ways.
+    before { visit user_path(user) } # /app/views/users/show.html.erb
+    it { should have_selector('div.pagination') }
+
+  end
+  
   describe "signup page" do
     before { visit signup_path }
 
@@ -144,14 +178,13 @@ describe "User pages" do
     describe "forbidden attributes" do
       let(:params) do
         { user: { admin: true, password: user.password,
-                  password_confirmation: user.password } }
+          password_confirmation: user.password } }
+        end
+        before do
+          sign_in user, no_capybara: true
+          patch user_path(user), params
+        end
+        specify { expect(user.reload).not_to be_admin }
       end
-      before do
-        sign_in user, no_capybara: true
-        patch user_path(user), params
-      end
-      specify { expect(user.reload).not_to be_admin }
-    end
   end #end of edit
-
 end
