@@ -192,7 +192,7 @@ describe "following" do
   end
 end
 
-#exercise 11.1
+#exercise 11.5.1
 describe "dependent destroy for followings" do
  let(:other_user) { FactoryGirl.create(:user) }
   before do
@@ -211,7 +211,7 @@ describe "dependent destroy for followings" do
   end
 end
 
-#exercise 11.1
+#exercise 11.5.1
 describe "dependent destroy for followers" do
  let(:other_user) { FactoryGirl.create(:user) }
   before do
@@ -223,10 +223,7 @@ it "should destroy associated followers" do
   
    followers = @user.reverse_relationships.to_a
    @user.destroy
-    #check other user's followers table, make a copy
-   
-    #destroy user so we should expect that user as a follower in the reverse relationships table 
-    
+    #check user's followers table, make a copy
   expect(followers).not_to be_empty
     followers.each do |follower|
      expect(Relationship.where(followed_id: @user.id)).to be_empty
